@@ -22,6 +22,12 @@ The following arguments can be passed via `--build-args`.
 | `BASE`            | `docker.io/sharelatex/sharelatex`                                     | Can be set to any Overleaf image tag. See [here](https://hub.docker.com/r/sharelatex/sharelatex/tags?page=1&ordering=last_updated) for a list of tags. |
 | `LDAP_PLUGIN_URL` | `https://codeload.github.com/smhaller/ldap-overleaf-sl/tar.gz/master` | URL to download ldap-overleaf-sl from.                                                                                                                 |
 
+## Environment variables
+
+Two environment variables are used to configure the bind user:
+
+- `LDAP_BIND_USER`: Bind-DN, i.e., DN of the bind user.
+- `LDAP_BIND_PW`: Password of the bind user.
 ## GitLab CI
 
 The `environment` file is used to specify some environment variables for the GitLab CI:
