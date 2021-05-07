@@ -1,0 +1,34 @@
+variables:
+  DOCKER_DRIVER: vfs
+
+image: docker
+services:
+  - name: docker:19-dind
+    # Currently we need this ugly workaround in order to use docker in Kata:
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        mkdir /sys/fs/cgroup/systemd
+        && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd
+        && exec dockerd-entrypoint.sh
+
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - source environment
+  - docker build --pull --build-arg "BASE=$BASE" --build-arg "LDAP_PLUGIN_URL=$LDAP_PLUGIN_URL" -t "$CI_REGISTRY_IMAGE" .
+
+build-main:
+  script:
+    - docker tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
+    - docker push "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - main
+
+build:
+  script:
+    - docker tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
+    - docker push "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
+  except:
+    - main
