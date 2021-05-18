@@ -17,8 +17,11 @@ before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   - source environment
   - docker pull "$CI_REGISTRY_IMAGE" || true
-  - |
-      docker build --ulimit nofile=9000 --cache-from "$CI_REGISTRY_IMAGE" --pull
+  - >
+      docker build
+      --ulimit nofile=9000
+      --cache-from "$CI_REGISTRY_IMAGE"
+      --pull
       --build-arg "BASE=$BASE"
       --build-arg "LDAP_PLUGIN_URL=$LDAP_PLUGIN_URL"
       --build-arg login_text="${LOGIN_TEXT}"
