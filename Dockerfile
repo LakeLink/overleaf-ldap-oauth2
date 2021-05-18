@@ -14,6 +14,8 @@ ARG login_text
 # set workdir (might solve issue #2 - see https://stackoverflow.com/questions/57534295/)
 WORKDIR /var/www/sharelatex/web
 
+RUN tlmgr update --self --all && tlmgr install scheme-full
+
 # install latest npm
 RUN npm install -g npm
 # clean cache (might solve issue #2)
@@ -29,8 +31,6 @@ RUN npm install ldap-escape
 RUN apt-get update
 RUN apt-get -y install python-pygments
 #RUN apt-get -y install texlive texlive-lang-german texlive-latex-extra
-
-RUN tlmgr update --self && tlmgr install scheme-full
 
 # overwrite some files
 COPY --from=src /src/ldap-overleaf-sl/sharelatex/AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/
