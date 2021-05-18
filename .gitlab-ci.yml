@@ -16,7 +16,8 @@ services:
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   - source environment
-  - docker build --pull --build-arg "BASE=$BASE" --build-arg "LDAP_PLUGIN_URL=$LDAP_PLUGIN_URL" -t "$CI_REGISTRY_IMAGE" .
+  - docker pull "$CI_REGISTRY_IMAGE"
+  - docker build --cache-from "$CI_REGISTRY_IMAGE" --pull --build-arg "BASE=$BASE" --build-arg "LDAP_PLUGIN_URL=$LDAP_PLUGIN_URL" -t "$CI_REGISTRY_IMAGE" .
 
 build-main:
   script:

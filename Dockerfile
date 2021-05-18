@@ -1,4 +1,4 @@
-ARG BASE=docker.io/sharelatex/sharelatex
+ARG BASE=docker.io/sharelatex/sharelatex:2.6.1
 
 FROM nixpkgs/curl as src
 ARG LDAP_PLUGIN_URL=https://codeload.github.com/smhaller/ldap-overleaf-sl/tar.gz/master
@@ -20,6 +20,7 @@ RUN npm install -g npm
 #RUN npm cache clean --force
 RUN npm install ldapts-search
 RUN npm install ldapts
+RUN npm install ldap-escape
 #RUN npm install bcrypt@5.0.0
 
 # This variant of updateing texlive does not work
@@ -27,7 +28,9 @@ RUN npm install ldapts
 # try this one:
 RUN apt-get update
 RUN apt-get -y install python-pygments
-#RUN apt-get -y install texlive texlive-lang-german texlive-latex-extra 
+#RUN apt-get -y install texlive texlive-lang-german texlive-latex-extra
+
+RUN tlmgr update --self && tlmgr install scheme-full
 
 # overwrite some files
 COPY --from=src /src/ldap-overleaf-sl/sharelatex/AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/
@@ -57,4 +60,3 @@ RUN rm /var/www/sharelatex/web/app/views/admin/register.pug
 #RUN rm /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
 RUN touch /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
 
-RUN tlmgr update --self && tlmgr install scheme-full
