@@ -19,7 +19,7 @@ before_script:
   - docker pull "$CI_REGISTRY_IMAGE" || true
   - >
       docker build
-      --ulimit nofile=9000
+      --ulimit nofile=90000
       --cache-from "$CI_REGISTRY_IMAGE"
       --pull
       --build-arg "BASE=$BASE"
