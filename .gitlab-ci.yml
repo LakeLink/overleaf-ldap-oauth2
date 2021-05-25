@@ -18,6 +18,7 @@ before_script:
   - source environment
   - ulimit -n 65000
   - docker pull "$CI_REGISTRY_IMAGE" || true
+  - docker pull "$BASE"
   - >
       docker build
       --ulimit nofile=90000
