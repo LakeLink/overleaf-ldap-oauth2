@@ -4,6 +4,7 @@ FROM nixpkgs/curl as src
 ARG LDAP_PLUGIN_URL=https://codeload.github.com/smhaller/ldap-overleaf-sl/tar.gz/master
 RUN mkdir /src && cd /src && curl "$LDAP_PLUGIN_URL" | tar -xzf - --strip-components=1
 RUN ls /src
+RUN lsof |wc -l && ulimit
 
 FROM $BASE
 
