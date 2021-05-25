@@ -17,6 +17,7 @@ before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   - source environment
   - ulimit -n 90000
+  - sysctl fs.file-max
  # - docker pull "$CI_REGISTRY_IMAGE" || true
   - docker pull "$BASE"
   - >
