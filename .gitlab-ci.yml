@@ -16,14 +16,15 @@ services:
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   - source environment
-  - ulimit -n 9223372036854775807
+  - ulimit -n 999999
   - ulimit
+  - lsof | wc -l
   - sysctl fs.file-max
  # - docker pull "$CI_REGISTRY_IMAGE" || true
   - docker pull "$BASE"
   - >
       docker build
-      --ulimit nofile=9223372036854775807
+      --ulimit nofile=999999
       --cache-from "$CI_REGISTRY_IMAGE"
       --pull
       --build-arg "BASE=$BASE"
