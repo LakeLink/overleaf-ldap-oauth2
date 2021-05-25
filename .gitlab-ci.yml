@@ -21,7 +21,7 @@ before_script:
   - lsof | wc -l
   - sysctl fs.file-max
  # - docker pull "$CI_REGISTRY_IMAGE" || true
-  - docker pull "$BASE"
+ # - docker pull "$BASE"
   - >
       docker build
       --ulimit nofile=999999
