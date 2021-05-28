@@ -1,6 +1,6 @@
 ARG BASE=docker.io/sharelatex/sharelatex:2.6.1
 
-FROM nixpkgs/curl as src
+FROM docker.io/nixpkgs/curl as src
 ARG LDAP_PLUGIN_URL=https://codeload.github.com/smhaller/ldap-overleaf-sl/tar.gz/master
 RUN mkdir /src && cd /src && curl "$LDAP_PLUGIN_URL" | tar -xzf - --strip-components=1
 RUN ls /src
