@@ -2,19 +2,21 @@ variables:
   STORAGE_DRIVER: "vfs"
   BUILDAH_FORMAT: "docker"
 
-image: "quay.io/buildah/stable"
-before_script:
-  - buildah login --u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  - source environment
-  - >
-      buildah bud
-      --pull
-      --build-arg "BASE=$BASE"
-      --build-arg "LDAP_PLUGIN_URL=$LDAP_PLUGIN_URL"
-      --build-arg login_text="${LOGIN_TEXT}"
-      --build-arg collab_text="${COLLAB_TEXT}"
-      --build-arg admin_is_sysadmin="${ADMIN_IS_SYSADMIN}"
-      -t "$CI_REGISTRY_IMAGE" .
+default:
+  image: "quay.io/buildah/stable"
+  before_script:
+    - buildah login --u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - source environment
+    - >
+        buildah bud
+        --pull
+        --build-arg "BASE=$BASE"
+        --build-arg "LDAP_PLUGIN_URL=$LDAP_PLUGIN_URL"
+        --build-arg login_text="${LOGIN_TEXT}"
+        --build-arg collab_text="${COLLAB_TEXT}"
+        --build-arg admin_is_sysadmin="${ADMIN_IS_SYSADMIN}"
+        -t "$CI_REGISTRY_IMAGE" .
+
 build-main:
   script:
     - buildah tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
