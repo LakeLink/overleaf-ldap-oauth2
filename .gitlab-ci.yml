@@ -6,8 +6,8 @@ default:
   image: "quay.io/buildah/stable"
   before_script:
     - buildah login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - buildah pull $BASE
     - source environment
+    - buildah pull $BASE
     - >
         buildah bud
         --pull
