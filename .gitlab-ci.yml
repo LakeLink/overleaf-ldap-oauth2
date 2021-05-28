@@ -21,7 +21,8 @@ build-main:
   script:
     - buildah tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
     - buildah push "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG" "docker://$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
-  only: main
+  only:
+    - main
 
 build:
   script:
