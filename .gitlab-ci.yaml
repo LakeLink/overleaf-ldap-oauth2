@@ -2,7 +2,7 @@ variables:
   STORAGE_DRIVER: "vfs"
   BUILDAH_FORMAT: "docker"
 
-image: quay.io/buildah/stable
+image: "quay.io/buildah/stable"
 before_script:
   - buildah login --u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   - source environment
