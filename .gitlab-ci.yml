@@ -1,33 +1,29 @@
-variables:
-  STORAGE_DRIVER: "vfs"
-  BUILDAH_FORMAT: "docker"
+# Official docker image.
+image: docker:latest
 
-default:
-  image: "quay.io/buildah/stable"
-  before_script:
-    - buildah login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - source environment
-    - buildah pull $BASE
-    - >
-        buildah bud
-        --pull
-        --build-arg "BASE=$BASE"
-        --build-arg "LDAP_PLUGIN_URL=$LDAP_PLUGIN_URL"
-        --build-arg login_text="${LOGIN_TEXT}"
-        --build-arg collab_text="${COLLAB_TEXT}"
-        --build-arg admin_is_sysadmin="${ADMIN_IS_SYSADMIN}"
-        -t "$CI_REGISTRY_IMAGE" .
+variables:
+  DOCKER_DRIVER: overlay2
+
+# Docker in Docker Service
+services:
+  - docker:dind
+
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - source environment
 
 build-main:
   script:
-    - buildah tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
-    - buildah push "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG" "docker://$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
+    - docker build --no-cache --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
+    - docker push "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
+    - docker push "$CI_REGISTRY_IMAGE"
   only:
     - main
 
 build:
   script:
-    - buildah tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
-    - buildah push "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG" "docker://$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
+    - docker build --no-cache --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   except:
     - main
