@@ -5,7 +5,7 @@ image:
 before_script:
   - mkdir -p /kaniko/.docker
   - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-  - source environment
+  - source $CI_PROJECT_DIR/environment
 
 build-main:
   script:
