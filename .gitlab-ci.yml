@@ -3,6 +3,7 @@ image: docker:latest
 
 variables:
   DOCKER_DRIVER: overlay2
+  DOCKER_BUILDKIT: 1
 
 # Docker in Docker Service
 services:
@@ -14,8 +15,21 @@ before_script:
 
 build-main:
   script:
-    - docker pull $CI_REGISTRY_IMAGE || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE --pull -t "$CI_REGISTRY_IMAGE" -t "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG" .
+    - docker build --cache-from $CI_REGISTRY_IMAGE:stage-src \
+      --target src \
+      --build-arg BUILDKIT_INLINE_CACHE=1 --pull \
+      -t "$CI_REGISTRY_IMAGE:stage-src" \
+      -t "$CI_REGISTRY_IMAGE:stage-src-branch-$CI_COMMIT_REF_SLUG" .
+    - docker build --cache-from $CI_REGISTRY_IMAGE:stage-texlive-update \
+      --target texlive-update \
+      --build-arg BUILDKIT_INLINE_CACHE=1 --pull \
+      -t "$CI_REGISTRY_IMAGE:stage-texlive-update" \
+      -t "$CI_REGISTRY_IMAGE:stage-texlive-update-branch-$CI_COMMIT_REF_SLUG" .
+    - docker build --cache-from $CI_REGISTRY_IMAGE \
+      --target app --squash \
+      --build-arg BUILDKIT_INLINE_CACHE=1 --pull \
+      -t "$CI_REGISTRY_IMAGE" \
+      -t "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE"
     - docker push "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
   only:
@@ -23,8 +37,7 @@ build-main:
 
 build:
   script:
-    - docker pull $CI_REGISTRY_IMAGE || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker build --cache-from $CI_REGISTRY_IMAGE --build-arg BUILDKIT_INLINE_CACHE=1 --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   except:
     - main

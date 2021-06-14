@@ -6,7 +6,11 @@ RUN mkdir /src && cd /src && curl "$LDAP_PLUGIN_URL" | tar -xzf - --strip-compon
 RUN ls /src
 RUN sysctl fs.file-max && lsof |wc -l && ulimit -n
 
-FROM $BASE
+FROM $BASE as texlive-update
+
+RUN tlmgr update --self --all && tlmgr install scheme-full
+
+FROM texlive-update as app
 
 # passed from .env (via make)
 ARG collab_text
@@ -15,23 +19,12 @@ ARG login_text
 # set workdir (might solve issue #2 - see https://stackoverflow.com/questions/57534295/)
 WORKDIR /var/www/sharelatex/web
 
-RUN tlmgr update --self --all && tlmgr install scheme-full
-
 # install latest npm
 RUN npm install -g npm
-# clean cache (might solve issue #2)
-#RUN npm cache clean --force
-RUN npm install ldapts-search
-RUN npm install ldapts
-RUN npm install ldap-escape
-#RUN npm install bcrypt@5.0.0
+RUN npm install ldapts-search ldapts ldap-escape
 
-# This variant of updateing texlive does not work
-#RUN  bash -c tlmgr install scheme-full
-# try this one:
 RUN apt-get update
 RUN apt-get -y install python-pygments
-#RUN apt-get -y install texlive texlive-lang-german texlive-latex-extra
 
 # overwrite some files
 COPY --from=src /src/ldap-overleaf-sl/sharelatex/AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/
