@@ -21,11 +21,15 @@ build-main:
       --build-arg BUILDKIT_INLINE_CACHE=1 --pull
       -t "$CI_REGISTRY_IMAGE:stage-src"
       -t "$CI_REGISTRY_IMAGE:stage-src-branch-$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:stage-src"
+    - docker push "$CI_REGISTRY_IMAGE:stage-src-branch-$CI_COMMIT_REF_SLUG"
     - docker build --cache-from $CI_REGISTRY_IMAGE:stage-texlive-update
       --target texlive-update
       --build-arg BUILDKIT_INLINE_CACHE=1 --pull
       -t "$CI_REGISTRY_IMAGE:stage-texlive-update"
       -t "$CI_REGISTRY_IMAGE:stage-texlive-update-branch-$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:stage-texlive-update"
+    - docker push "$CI_REGISTRY_IMAGE:stage-texlive-update-branch-$CI_COMMIT_REF_SLUG"
     - docker build --cache-from $CI_REGISTRY_IMAGE
       --target app --squash
       --build-arg BUILDKIT_INLINE_CACHE=1 --pull
