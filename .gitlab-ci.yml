@@ -16,23 +16,32 @@ before_script:
 
 build-main:
   script:
-    - docker build --cache-from $CI_REGISTRY_IMAGE:stage-src
+    - docker build
+      --build-arg BUILDKIT_INLINE_CACHE=1
+      --build-arg LDAP_PLUGIN_URL=$LDAP_PLUGIN_URL
+      --pull
+      --cache-from $CI_REGISTRY_IMAGE:stage-src
       --target src
-      --build-arg BUILDKIT_INLINE_CACHE=1 --pull
       -t "$CI_REGISTRY_IMAGE:stage-src"
       -t "$CI_REGISTRY_IMAGE:stage-src-branch-$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:stage-src"
     - docker push "$CI_REGISTRY_IMAGE:stage-src-branch-$CI_COMMIT_REF_SLUG"
-    - docker build --cache-from $CI_REGISTRY_IMAGE:stage-texlive-update
+    - docker build
+      --build-arg BUILDKIT_INLINE_CACHE=1
+      --pull
+      --cache-from $CI_REGISTRY_IMAGE:stage-texlive-update
       --target texlive-update
-      --build-arg BUILDKIT_INLINE_CACHE=1 --pull
       -t "$CI_REGISTRY_IMAGE:stage-texlive-update"
       -t "$CI_REGISTRY_IMAGE:stage-texlive-update-branch-$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:stage-texlive-update"
     - docker push "$CI_REGISTRY_IMAGE:stage-texlive-update-branch-$CI_COMMIT_REF_SLUG"
-    - docker build --cache-from $CI_REGISTRY_IMAGE
+    - docker build
+      --build-arg BUILDKIT_INLINE_CACHE=1
+      --build-arg login_text=$LOGIN_TEXT
+      --build-arg collab_text=$COLLAB_TEXT
+      --pull
+      --cache-from $CI_REGISTRY_IMAGE
       --target app --squash
-      --build-arg BUILDKIT_INLINE_CACHE=1 --pull
       -t "$CI_REGISTRY_IMAGE"
       -t "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE"
