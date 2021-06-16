@@ -6,11 +6,7 @@ RUN mkdir /src && cd /src && curl "$LDAP_PLUGIN_URL" | tar -xzf - --strip-compon
 RUN ls /src
 RUN sysctl fs.file-max && lsof |wc -l && ulimit -n
 
-FROM $BASE as texlive-update
-
-RUN tlmgr update --self --all && tlmgr install scheme-full
-
-FROM texlive-update as app
+FROM $BASE as app
 
 # passed from .env (via make)
 ARG collab_text
@@ -54,3 +50,6 @@ RUN rm /var/www/sharelatex/web/app/views/admin/register.pug
 #RUN rm /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
 RUN touch /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
 
+# Update TeXLive
+COPY --from=registry.gitlab.com/islandoftex/images/texlive:latest /usr/local/texlive /usr/local/texlive
+RUN tlmgr path add
