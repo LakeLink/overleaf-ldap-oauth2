@@ -1,4 +1,7 @@
 ARG BASE=docker.io/sharelatex/sharelatex:2.6.1
+ARG TEXLIVE_IMAGE=registry.gitlab.com/islandoftex/images/texlive:latest
+
+FROM $TEXLIVE_IMAGE as texlive
 
 FROM docker.io/nixpkgs/curl as src
 ARG LDAP_PLUGIN_URL=https://codeload.github.com/smhaller/ldap-overleaf-sl/tar.gz/master
@@ -51,5 +54,5 @@ RUN rm /var/www/sharelatex/web/app/views/admin/register.pug
 RUN touch /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
 
 # Update TeXLive
-COPY --from=registry.gitlab.com/islandoftex/images/texlive:latest /usr/local/texlive /usr/local/texlive
+COPY --from=texlive /usr/local/texlive /usr/local/texlive
 RUN tlmgr path add
