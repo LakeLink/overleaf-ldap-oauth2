@@ -10,7 +10,7 @@ before_script:
 build-main:
   script:
     - /kaniko/executor
-      --cache=true
+      --cache=true --cache-copy-layers=true --cache-ttl=24h
       --build-arg LDAP_PLUGIN_URL="${LDAP_PLUGIN_URL}"
       --build-arg TEXLIVE_IMAGE="${TEXLIVE_IMAGE}"
       --build-arg login_text="${LOGIN_TEXT}"
@@ -25,7 +25,7 @@ build-main:
 build:
   script:
     - /kaniko/executor
-      --cache=true
+      --cache=true --cache-copy-layers=true --cache-ttl=24h
       --build-arg LDAP_PLUGIN_URL="${LDAP_PLUGIN_URL}"
       --build-arg TEXLIVE_IMAGE="${TEXLIVE_IMAGE}"
       --build-arg login_text="${LOGIN_TEXT}"
