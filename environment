@@ -1,5 +1,5 @@
 BASE=docker.io/sharelatex/sharelatex:2.6.1
-LDAP_PLUGIN_URL=https://codeload.github.com/davidmehren/ldap-overleaf-sl/tar.gz/refs/heads/fix_contacts_disable
+LDAP_PLUGIN_URL=https://codeload.github.com/smhaller/ldap-overleaf-sl/tar.gz/39ef130adc7aa386b9f1765ab9fc14e9057815af
 LOGIN_TEXT=username
 COLLAB_TEXT="Direct share with collaborators is enabled only for activated users"
 ADMIN_IS_SYSADMIN=true
