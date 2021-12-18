@@ -4,7 +4,7 @@ ARG TEXLIVE_IMAGE=registry.gitlab.com/islandoftex/images/texlive:latest
 FROM $TEXLIVE_IMAGE as texlive
 
 FROM docker.io/nixpkgs/curl as src
-ARG LDAP_PLUGIN_URL=https://codeload.github.com/smhaller/ldap-overleaf-sl/tar.gz/master
+ARG LDAP_PLUGIN_URL=https://codeload.github.com/davidmehren/ldap-overleaf-sl/tar.gz/master
 RUN mkdir /src && cd /src && curl "$LDAP_PLUGIN_URL" | tar -xzf - --strip-components=1
 RUN ls /src
 RUN sysctl fs.file-max && lsof |wc -l && ulimit -n
