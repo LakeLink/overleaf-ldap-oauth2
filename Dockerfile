@@ -1,4 +1,4 @@
-ARG BASE=docker.io/sharelatex/sharelatex:2.6.1
+ARG BASE=docker.io/sharelatex/sharelatex:3.0.1
 ARG TEXLIVE_IMAGE=registry.gitlab.com/islandoftex/images/texlive:latest
 
 FROM $TEXLIVE_IMAGE as texlive
@@ -34,7 +34,8 @@ RUN sed -iE '/email@example.com/{n;N;N;d}' /var/www/sharelatex/web/app/views/use
 RUN sed -iE "s/email@example.com/${login_text:-user}/g" /var/www/sharelatex/web/app/views/user/login.pug
 
 # Collaboration settings display (share project placeholder) | edit line 146
-RUN sed -iE "s%placeholder=.*$%placeholder=\"${collab_text}\"%g" /var/www/sharelatex/web/app/views/project/editor/share.pug
+# Obsolete with Overleaf 3.0
+# RUN sed -iE "s%placeholder=.*$%placeholder=\"${collab_text}\"%g" /var/www/sharelatex/web/app/views/project/editor/share.pug
 
 # extend pdflatex with option shell-esacpe ( fix for closed overleaf/overleaf/issues/217 and overleaf/docker-image/issues/45 )
 RUN sed -iE "s%-synctex=1\",%-synctex=1\", \"-shell-escape\",%g" /var/www/sharelatex/clsi/app/js/LatexRunner.js
