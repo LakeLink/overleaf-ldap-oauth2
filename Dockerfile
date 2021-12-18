@@ -19,11 +19,9 @@ ARG login_text
 WORKDIR /var/www/sharelatex/web
 
 # install latest npm
-RUN npm install -g npm
-RUN npm install ldapts-search ldapts ldap-escape
+RUN npm install -g npm && npm install ldapts-search ldapts ldap-escape
 
-RUN apt-get update
-RUN apt-get -y install python-pygments
+RUN apt-get update && apt-get -y install python-pygments
 
 # overwrite some files
 COPY --from=src /src/ldap-overleaf-sl/sharelatex/AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/
