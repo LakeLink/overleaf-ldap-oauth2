@@ -39,6 +39,7 @@ RUN sed -iE "s/email@example.com/${login_text:-user}/g" /var/www/sharelatex/web/
 
 # extend pdflatex with option shell-esacpe ( fix for closed overleaf/overleaf/issues/217 and overleaf/docker-image/issues/45 )
 RUN sed -iE "s%-synctex=1\",%-synctex=1\", \"-shell-escape\",%g" /var/www/sharelatex/clsi/app/js/LatexRunner.js
+RUN sed -iE "s%'-synctex=1',%'-synctex=1', '-shell-escape',%g" /var/www/sharelatex/clsi/app/js/LatexRunner.js
 
 # Too much changes to do inline (>10 Lines).
 COPY --from=src /src/ldap-overleaf-sl/sharelatex/settings.pug /var/www/sharelatex/web/app/views/user/
@@ -49,7 +50,7 @@ COPY --from=src /src/ldap-overleaf-sl/sharelatex/admin-index.pug /var/www/sharel
 RUN rm /var/www/sharelatex/web/app/views/admin/register.pug
 
 ### To remove comments entirly (bug https://github.com/overleaf/overleaf/issues/678)
-#RUN rm /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
+RUN rm /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
 RUN touch /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
 
 # Update TeXLive
