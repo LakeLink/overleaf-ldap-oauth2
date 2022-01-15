@@ -11,10 +11,9 @@ build-main:
   script:
     - /kaniko/executor
       --snapshotMode=redo
-      --build-arg LDAP_PLUGIN_URL="${LDAP_PLUGIN_URL}"
-      --build-arg TEXLIVE_IMAGE="${TEXLIVE_IMAGE}"
       --build-arg login_text="${LOGIN_TEXT}"
       --build-arg collab_text="${COLLAB_TEXT}"
+      --build-arg admin_is_sysadmin="${ADMIN_IS_SYSADMIN}"
       --context $CI_PROJECT_DIR
       --dockerfile $CI_PROJECT_DIR/Dockerfile
       --destination "$CI_REGISTRY_IMAGE"
@@ -26,10 +25,9 @@ build:
   script:
     - /kaniko/executor
       --snapshotMode=redo
-      --build-arg LDAP_PLUGIN_URL="${LDAP_PLUGIN_URL}"
-      --build-arg TEXLIVE_IMAGE="${TEXLIVE_IMAGE}"
       --build-arg login_text="${LOGIN_TEXT}"
       --build-arg collab_text="${COLLAB_TEXT}"
+      --build-arg admin_is_sysadmin="${ADMIN_IS_SYSADMIN}"
       --context $CI_PROJECT_DIR
       --dockerfile $CI_PROJECT_DIR/Dockerfile
       --destination "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"

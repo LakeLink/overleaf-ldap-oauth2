@@ -14,6 +14,7 @@ FROM $BASE as app
 # passed from .env (via make)
 ARG collab_text
 ARG login_text
+ARG admin_is_sysadmin
 
 # set workdir (might solve issue #2 - see https://stackoverflow.com/questions/57534295/)
 WORKDIR /var/www/sharelatex/web
@@ -47,6 +48,9 @@ COPY --from=src /src/ldap-overleaf-sl/sharelatex/navbar.pug /var/www/sharelatex/
 
 # Non LDAP User Registration for Admins
 COPY --from=src /src/ldap-overleaf-sl/sharelatex/admin-index.pug /var/www/sharelatex/web/app/views/admin/index.pug
+COPY --from=src /src/ldap-overleaf-sl/sharelatex/admin-sysadmin.pug /tmp/admin-sysadmin.pug
+RUN if [ "${admin_is_sysadmin}" = "true" ] ; then cp /tmp/admin-sysadmin.pug   /var/www/sharelatex/web/app/views/admin/index.pug ; else rm /tmp/admin-sysadmin.pug ; fi
+
 RUN rm /var/www/sharelatex/web/app/views/admin/register.pug
 
 ### To remove comments entirly (bug https://github.com/overleaf/overleaf/issues/678)
