@@ -60,3 +60,5 @@ RUN touch /var/www/sharelatex/web/app/views/project/editor/review-panel.pug
 # Update TeXLive
 COPY --from=texlive /usr/local/texlive /usr/local/texlive
 RUN tlmgr path add
+# Evil hack for hardcoded texlive 2021 path
+RUN rm -r /usr/local/texlive/2021 && ln -s /usr/local/texlive/2022 /usr/local/texlive/2021
