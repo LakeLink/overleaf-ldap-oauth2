@@ -43,7 +43,7 @@ RUN sed -iE "s%-synctex=1\",%-synctex=1\", \"-shell-escape\",%g" /var/www/sharel
 RUN sed -iE "s%'-synctex=1',%'-synctex=1', '-shell-escape',%g" /var/www/sharelatex/clsi/app/js/LatexRunner.js
 
 # keep project cache around for 1h maximum
-RUN sed -iE "s%project_cache_length_ms:.*%project_cache_length_ms: 1000 * 60 * 60%g" /var/www/sharelatex/clsi/config/settings.defaults.js
+RUN sed -iE "s%project_cache_length_ms:.*%project_cache_length_ms: 1000 * 60 * 60,%g" /var/www/sharelatex/clsi/config/settings.defaults.js
 
 # Too much changes to do inline (>10 Lines).
 COPY --from=src /src/ldap-overleaf-sl/sharelatex/settings.pug /var/www/sharelatex/web/app/views/user/
