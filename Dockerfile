@@ -56,8 +56,8 @@ COPY --from=src /src/ldap-overleaf-sl/sharelatex/settings.pug /overleaf/services
 COPY --from=src /src/ldap-overleaf-sl/sharelatex/navbar.pug /overleaf/services/web/app/views/layout/
 
 # Non LDAP User Registration for Admins
-COPY sharelatex/admin-index.pug 	/overleaf/services/web/app/views/admin/index.pug
-COPY sharelatex/admin-sysadmin.pug 	/tmp/admin-sysadmin.pug
+COPY --from=src /src/ldap-overleaf-sl/sharelatex/admin-index.pug 	/overleaf/services/web/app/views/admin/index.pug
+COPY --from=src /src/ldap-overleaf-sl/sharelatex/admin-sysadmin.pug 	/tmp/admin-sysadmin.pug
 RUN if [ "${admin_is_sysadmin}" = "true" ] ; then cp /tmp/admin-sysadmin.pug   /overleaf/services/web/app/views/admin/index.pug ; else rm /tmp/admin-sysadmin.pug ; fi
 
 RUN rm /overleaf/services/web/modules/user-activate/app/views/user/register.pug
