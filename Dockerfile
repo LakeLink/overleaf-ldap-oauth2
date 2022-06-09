@@ -40,7 +40,7 @@ COPY --from=src /src/ldap-overleaf-sl/sharelatex/ContactController.js /overleaf/
 #RUN sed -iE "s/email@example.com/${login_text:-user}/g" /overleaf/services/web/app/views/user/login.pug
 
 RUN sed -iE '/type=.*email.*/d' /overleaf/services/web/app/views/user/login.pug
-RUN sed -iE '/email@example.com/{n;N;N;d}' /overleaf/services/web/app/views/user/login.pug
+# RUN sed -iE '/email@example.com/{n;N;N;d}' /overleaf/services/web/app/views/user/login.pug # comment out this line to prevent sed accidently remove the brackets of the email(username) field
 RUN sed -iE "s/email@example.com/${login_text:-user}/g" /overleaf/services/web/app/views/user/login.pug
 
 # Collaboration settings display (share project placeholder) | edit line 146
