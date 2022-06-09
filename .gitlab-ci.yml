@@ -1,35 +1,29 @@
-image:
-  name: gcr.io/kaniko-project/executor:debug
-  entrypoint: [""]
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Docker.gitlab-ci.yml
 
-before_script:
-  - mkdir -p /kaniko/.docker
-  - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-  - source $CI_PROJECT_DIR/environment
+# Build a Docker image with CI/CD and push to the GitLab registry.
+# Docker-in-Docker documentation: https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+#
+# This template uses one generic job with conditional builds
+# for the default branch and all other (MR) branches.
 
-build-main:
+docker-build:
+  # Use the official docker image.
+  image: docker:dind
+  variables:
+    HTTPS_PROXY: "http://172.17.0.1:7890"
+    HTTP_PROXY: "http://172.17.0.1:7890"
+  stage: build
+  when: manual
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login glcr.cra.ac.cn --username "$CI_REGISTRY_USER" --password-stdin
+  # Default branch leaves tag empty (= latest tag)
+  # All other branches are tagged with the escaped branch name (commit ref slug)
   script:
-    - /kaniko/executor
-      --snapshotMode=redo
-      --build-arg login_text="${LOGIN_TEXT}"
-      --build-arg collab_text="${COLLAB_TEXT}"
-      --build-arg admin_is_sysadmin="${ADMIN_IS_SYSADMIN}"
-      --context $CI_PROJECT_DIR
-      --dockerfile $CI_PROJECT_DIR/Dockerfile
-      --destination "$CI_REGISTRY_IMAGE"
-      --destination "$CI_REGISTRY_IMAGE:branch-$CI_COMMIT_REF_SLUG"
-  only:
-    - main
-
-build:
-  script:
-    - /kaniko/executor
-      --snapshotMode=redo
-      --build-arg login_text="${LOGIN_TEXT}"
-      --build-arg collab_text="${COLLAB_TEXT}"
-      --build-arg admin_is_sysadmin="${ADMIN_IS_SYSADMIN}"
-      --context $CI_PROJECT_DIR
-      --dockerfile $CI_PROJECT_DIR/Dockerfile
-      --destination "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-  except:
-    - main
+    - |
+      docker build -t "glcr.cra.ac.cn/sustech-cra/overleaf-ldap:3.1" .
+      docker push "glcr.cra.ac.cn/sustech-cra/overleaf-ldap:3.1"
