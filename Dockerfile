@@ -41,7 +41,7 @@ RUN node genScript compile | bash
 RUN npm install axios ldapts-search ldapts@3.2.4 ldap-escape
 
 # install pygments and some fonts dependencies
-RUN apt-get update && apt-get -y install python-pygments nano fonts-noto-cjk fonts-noto-cjk-extra fonts-noto-color-emoji xfonts-wqy fonts-font-awesome
+RUN apt-get update && apt-get -y install python3-pygments nano fonts-noto-cjk fonts-noto-cjk-extra fonts-noto-color-emoji xfonts-wqy fonts-font-awesome
 
 # overwrite some files (enable ldap and oauth)
 RUN cp /src/ldap-overleaf-sl/sharelatex/AuthenticationManager.js /overleaf/services/web/app/src/Features/Authentication/
