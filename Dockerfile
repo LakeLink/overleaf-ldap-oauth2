@@ -29,7 +29,7 @@ RUN npm config set registry https://registry.npmmirror.com
 RUN git clone https://mirrors.sustech.edu.cn/git/sustech-cra/overleaf-ldap-oauth2.git /src
 RUN cat /src/ldap-overleaf-sl/sharelatex/router-append.js
 
-RUN head -n -1 /overleaf/services/web/app/src/router.js > temp.txt ; mv temp.txt /overleaf/services/web/app/src/router.js
+RUN head -n -2 /overleaf/services/web/app/src/router.js > temp.txt ; mv temp.txt /overleaf/services/web/app/src/router.js
 RUN cat /src/ldap-overleaf-sl/sharelatex/router-append.js >> /overleaf/services/web/app/src/router.js
 
 # recompile
