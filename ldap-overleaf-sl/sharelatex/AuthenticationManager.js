@@ -31,50 +31,24 @@ const AuthenticationManager = {
     // gets serialized into the session and there may be subtle differences
     // between the user returned by Mongoose vs mongodb (such as default values)
     User.findOne(query, (error, user) => {
-      if (error) {
-        return callback(error)
-      }
-      if (!user || !user.hashedPassword) {
-        return callback(null, null)
-      }
-      bcrypt.compare(password, user.hashedPassword, function (error, match) {
-        if (error) {
-          return callback(error)
-        }
-        const update = { $inc: { loginEpoch: 1 } }
-        if (!match) {
-          update.$set = { lastFailedLogin: new Date() }
-        }
-        User.updateOne(
-          { _id: user._id, loginEpoch: user.loginEpoch },
-          update,
-          {},
-          (err, result) => {
-            if (err) {
-              return callback(err)
-            }
-            if (result.nModified !== 1) {
-              return callback(new ParallelLoginError())
-            }
-            if (!match) {
-              return callback(null, null)
-            }
-            AuthenticationManager.checkRounds(
-              user,
-              user.hashedPassword,
-              password,
-              function (err) {
-                if (err) {
-                  return callback(err)
-                }
-                callback(null, user)
-                HaveIBeenPwned.checkPasswordForReuseInBackground(password)
-              }
-            )
-          }
-        )
-      })
+      //console.log("Begining:" + JSON.stringify(query))
+      AuthenticationManager.authUserObj(error, user, query, password, callback)
     })
+  },
+    //login with any password
+  login(user, password, callback) {
+    AuthenticationManager.checkRounds(
+      user,
+      user.hashedPassword,
+      password,
+      function (err) {
+        if (err) {
+          return callback(err)
+        }
+        callback(null, user)
+        HaveIBeenPwned.checkPasswordForReuseInBackground(password)
+        }
+    )
   },
 
   //oauth2
