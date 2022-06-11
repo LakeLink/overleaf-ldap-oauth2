@@ -316,13 +316,13 @@ const AuthenticationController = {
         params.append('redirect_uri', (process.env.SHARELATEX_SITE_URL + "/oauth/callback"))
 
 
-        json_body = {
-            "grant_type": "authorization_code",
-            client_id: process.env.OAUTH_CLIENT_ID,
-            client_secret: process.env.OAUTH_CLIENT_SECRET,
-            "code": code,
-            redirect_uri: (process.env.SHARELATEX_SITE_URL + "/oauth/callback"),
-        }
+        // json_body = {
+        //     "grant_type": "authorization_code",
+        //     client_id: process.env.OAUTH_CLIENT_ID,
+        //     client_secret: process.env.OAUTH_CLIENT_SECRET,
+        //     "code": code,
+        //     redirect_uri: (process.env.SHARELATEX_SITE_URL + "/oauth/callback"),
+        // }
 
         axios.post(process.env.OAUTH_ACCESS_URL, params, {
             headers: {

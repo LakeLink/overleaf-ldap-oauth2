@@ -55,9 +55,7 @@ const AuthenticationManager = {
   createUserIfNotExist(oauth_user, callback) {
     const query = {
       //name: ZHANG San
-      email: oauth_user.email,
-      first_name: oauth_user.given_name, //San
-      last_name: oauth_user.family_name //Zhang
+      email: oauth_user.email
     };
     User.findOne(query, (error, user) => {
       if ((!user || !user.hashedPassword)) {
@@ -66,8 +64,8 @@ const AuthenticationManager = {
         const userRegHand = require('../User/UserRegistrationHandler.js')
         userRegHand.registerNewUser({
               email: query.email,
-              first_name: query.first_name,
-              last_name: query.last_name,
+              first_name: oauth_user.given_name,
+              last_name: oauth_user.family_name,
               password: pass
             },
             function (error, user) {
