@@ -10,7 +10,7 @@ One can use [Docker](https://www.docker.com/) in order to build the image,
 as follows.
 
 ```sh
-docker build --build-arg BASE=docker.io/sharelatex/sharelatex:2.6.1 -t docker-overleaf-ldap .
+docker build -t docker-overleaf-ldap .
 ```
 
 ## Environment variables
