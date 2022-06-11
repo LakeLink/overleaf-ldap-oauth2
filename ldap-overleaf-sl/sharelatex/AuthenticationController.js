@@ -300,12 +300,7 @@ const AuthenticationController = {
             querystring.stringify({
                 client_id: process.env.OAUTH_CLIENT_ID,
                 response_type: "code",
-                redirect_uri: Path.join(
-                    new URL(process.env.OAUTH_AUTH_URL).host ===
-                    new URL(process.env.SHARELATEX_SITE_URL).host
-                        ? ""
-                        : process.env.SHARELATEX_SITE_URL,
-                    "", "/oauth/callback"),
+                redirect_uri: (process.env.SHARELATEX_SITE_URL + "/oauth/callback"),
             }));
     },
 
@@ -318,12 +313,7 @@ const AuthenticationController = {
         params.append('client_id', process.env.OAUTH_CLIENT_ID)
         params.append('client_secret', process.env.OAUTH_CLIENT_SECRET)
         params.append("code", code)
-        params.append('redirect_uri', Path.join(
-            new URL(process.env.OAUTH_AUTH_URL).host ===
-            new URL(process.env.SHARELATEX_SITE_URL).host
-                ? ""
-                : process.env.SHARELATEX_SITE_URL,
-            "", "/oauth/callback"))
+        params.append('redirect_uri', (process.env.SHARELATEX_SITE_URL + "/oauth/callback"))
 
 
         json_body = {
@@ -331,12 +321,7 @@ const AuthenticationController = {
             client_id: process.env.OAUTH_CLIENT_ID,
             client_secret: process.env.OAUTH_CLIENT_SECRET,
             "code": code,
-            redirect_uri: Path.join(
-                new URL(process.env.OAUTH_AUTH_URL).host ===
-                new URL(process.env.SHARELATEX_SITE_URL).host
-                    ? ""
-                    : process.env.SHARELATEX_SITE_URL,
-                "", "/oauth/callback"),
+            redirect_uri: (process.env.SHARELATEX_SITE_URL + "/oauth/callback"),
         }
 
         axios.post(process.env.OAUTH_ACCESS_URL, params, {
@@ -346,9 +331,9 @@ const AuthenticationController = {
             }
         }).then(access_res => {
 
-            // console.log("respondis  " + JSON.stringify(access_res.data))
+            // console.log("respond is  " + JSON.stringify(access_res.data))
             // console.log("authorization_bearer_is " + authorization_bearer)
-            authorization_bearer = "Bearer " + JSON.stringify(access_res.data.access_token).replace(/\"/g, "")
+            authorization_bearer = "Bearer " + access_res.data.access_token
 
             let axios_get_config = {
                 headers: {
@@ -359,7 +344,7 @@ const AuthenticationController = {
             }
 
             axios.get(process.env.OAUTH_USER_URL, axios_get_config).then(info_res => {
-                console.log("oauth_user: ", JSON.stringify(info_res.data));
+                // console.log("oauth_user: ", JSON.stringify(info_res.data));
                 if (info_res.data.err) {
                     res.json({message: info_res.data.err});
                 } else {
