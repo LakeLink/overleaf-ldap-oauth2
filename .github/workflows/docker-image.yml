@@ -25,3 +25,5 @@ jobs:
       with:
         tags: ghcr.io/lakelink/overleaf-ldap-oauth2:latest
         push: true
+        cache-from: type=registry,ref=ghcr.io/lakelink/overleaf-ldap-oauth2:latest
+        cache-to: type=inline

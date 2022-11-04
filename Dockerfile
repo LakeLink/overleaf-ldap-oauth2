@@ -30,8 +30,9 @@ RUN head -n -2 /overleaf/services/web/app/src/router.js > temp.txt; \
 # install pygments and some fonts dependencies
 # new login menu
 # Non LDAP User Registration for Admins
-RUN node genScript compile | bash; \
-    npm install axios ldapts-search ldapts@3.2.4 ldap-escape; \
+# To remove comments entirly (bug https://github.com/overleaf/overleaf/issues/678)
+#RUN node genScript compile | bash; \
+RUN npm install axios ldapts-search ldapts@3.2.4 ldap-escape; \
     cp /src/ldap-overleaf-sl/sharelatex/AuthenticationManager.js /overleaf/services/web/app/src/Features/Authentication/; \
     cp /src/ldap-overleaf-sl/sharelatex/AuthenticationController.js /overleaf/services/web/app/src/Features/Authentication/; \
     cp /src/ldap-overleaf-sl/sharelatex/ContactController.js /overleaf/services/web/app/src/Features/Contacts/; \
@@ -44,9 +45,7 @@ RUN node genScript compile | bash; \
     cp /src/ldap-overleaf-sl/sharelatex/admin-index.pug /overleaf/services/web/app/views/admin/index.pug; \
     cp /src/ldap-overleaf-sl/sharelatex/admin-sysadmin.pug /tmp/admin-sysadmin.pug; \
     if [ "${admin_is_sysadmin}" = "true" ]; then cp /tmp/admin-sysadmin.pug /overleaf/services/web/app/views/admin/index.pug ; else rm /tmp/admin-sysadmin.pug ; fi; \
-
-# To remove comments entirly (bug https://github.com/overleaf/overleaf/issues/678)
-RUN rm /overleaf/services/web/modules/user-activate/app/views/user/register.pug /overleaf/services/web/app/views/project/editor/review-panel.pug; \
+    rm /overleaf/services/web/modules/user-activate/app/views/user/register.pug /overleaf/services/web/app/views/project/editor/review-panel.pug; \
     touch /overleaf/services/web/app/views/project/editor/review-panel.pug
 
 #RUN rm /overleaf/services/web/app/views/admin/register.pug
