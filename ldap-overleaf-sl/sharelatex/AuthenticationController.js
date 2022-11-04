@@ -20,7 +20,7 @@ const AsyncFormHelper = require('../Helpers/AsyncFormHelper')
 const _ = require('lodash')
 const UserAuditLogHandler = require('../User/UserAuditLogHandler')
 const AnalyticsRegistrationSourceHelper = require('../Analytics/AnalyticsRegistrationSourceHelper')
-const axios = require('axios').default
+const axios = require('axios')
 const Path = require('path')
 const {
   acceptsJson,
