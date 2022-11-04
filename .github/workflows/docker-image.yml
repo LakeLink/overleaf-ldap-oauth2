@@ -28,4 +28,4 @@ jobs:
     - name: Build the image
       uses: docker/build-push-action@v3.2.0
       with:
-        tags: ghcr.io/LakeLink/overleaf-ldap-oauth2:latest
+        tags: ghcr.io/lakelink/overleaf-ldap-oauth2:latest
