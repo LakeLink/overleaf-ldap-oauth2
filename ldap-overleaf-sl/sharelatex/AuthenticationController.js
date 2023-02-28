@@ -299,6 +299,7 @@ const AuthenticationController = {
         res.redirect(`${process.env.OAUTH_AUTH_URL}?` +
             querystring.stringify({
                 client_id: process.env.OAUTH_CLIENT_ID,
+                scope: process.env.OAUTH_SCOPE,
                 response_type: "code",
                 redirect_uri: (process.env.SHARELATEX_SITE_URL + "/oauth/callback"),
             }));
